@@ -8,14 +8,14 @@ module BootstrapPagination
     def to_html
       list_items = pagination.map do |item|
         case item
-          when Fixnum
+          when Integer
             page_number(item)
           else
             send(item)
         end
       end.join(@options[:link_separator])
 
-      tag("ul", list_items, class: ul_class)
+      tag("ul", list_items, class: "justify-content-center #{ul_class}")
     end
 
     def container_attributes
@@ -28,9 +28,9 @@ module BootstrapPagination
       link_options = @options[:link_options] || {}
 
       if page == current_page
-        tag("li", tag("span", page), class: "active")
+        tag("li", link(page, page, class: "page-link"), class: "page-item active")
       else
-        tag("li", link(page, page, link_options.merge(rel: rel_value(page))))
+        tag("li", link(page, page, class: "page-link"), class: "page-item")
       end
     end
 
@@ -38,14 +38,14 @@ module BootstrapPagination
       link_options = @options[:link_options] || {}
 
       if page
-        tag("li", link(text, page, link_options), class: classname)
+        tag("li", link(text, page, class: "page-link"), class: "page-item #{classname}")
       else
-        tag("li", tag("span", text), class: "%s disabled" % classname)
+        tag("li", link(text, page, class: "page-link"), class: "%s page-item disabled" % classname)
       end
     end
 
     def gap
-      tag("li", tag("span", ELLIPSIS), class: "disabled")
+      tag("li", link(ELLIPSIS, "#", class: "page-link"), class: "page-item disabled")
     end
 
     def previous_page
